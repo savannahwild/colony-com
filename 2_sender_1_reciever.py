@@ -15,13 +15,13 @@ import helper_functions as hf
 def main():
     ## experimental parameters
     D = 3E-3        # nutrient diffusion coeff (#mm2/min)
-    rho_n = 0.3     # consumption rate of nutrients by X
-    rc = 1E-2       # growth rate of X on N
-    Dc = 1E-5       # cell diffusion coefficient
-    w = 1
-    Da = 0.03
-    rho_A = 0.1       # production rate of AHL
-    Dt = 0.01     #random difusion rate of target molecule
+    rho_n = 0.3     # consumption rate of nutrients by X work out?
+    rc = 1E-2          #dhange growth rate of X (on n?) 0.0148?
+    Dc = 1E-5       # cell diffusion coefficient ratev 1.333 go backwards?
+    w = 1           #time
+    Da = 0.0294       #ahl diff constant
+    rho_A = 0.01       #production rate of AHL
+    Dt = 0.03     #random difusion constant of target molecule?
 
     environment_size = (60, 60)
     plate = Plate(environment_size)
@@ -74,19 +74,20 @@ def main():
 
     ## add target to plate
     U_T = np.zeros(environment_size)
-    grad_values = np.logspace(-4, 5, environment_size[0])
-    for idx, value in enumerate(grad_values):
-        U_T[idx,:] = value
+    for i in np.linspace(0, 59, environment_size[0]):
+        if (i == 30):
+            U_T[15, int(i)] = 0.001
 
     T = Species("T", U_T)
     def T_behaviour(species, params):
         ## unpack params
         D, rho_n, Dc, rc, w, rho_A, Da, Dt = params
-        #t = Dt * hf.ficks(species['T'], w)
-        t = 0
+        t = Dt * hf.ficks(species['T'], w)
+        #t = 0
         return t
     T.set_behaviour(T_behaviour)
     plate.add_species(T)
+
 
     ## add AHL to plate
     U_A = np.zeros(environment_size)

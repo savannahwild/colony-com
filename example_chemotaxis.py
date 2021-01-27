@@ -39,6 +39,9 @@ def main():
         ## unpack params
         D, rho_n, Dc, rc, w, rho_A, Da = params
         r = Dc * hf.leaky_hill(s=species['A'], K=1, lam=2, max=1e2, min=1) * hf.ficks(species['R'], w) + rc * species['N'] * species['R']
+        #co x rate(dep conc A) x diffusion rate R  +  reaction () replace with monod equation
+        #dose response curve half max conc + work our hill + max min 
+        #lam not change
         return r
     R.set_behaviour(R_behaviour)
     plate.add_species(R)
