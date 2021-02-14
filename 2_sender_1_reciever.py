@@ -5,7 +5,6 @@ Created on Thu Jan 21 17:38:20 2021
 @author: savan
 """
 
-
 from plate import Plate
 from species import Species
 import numpy as np
@@ -62,7 +61,7 @@ def main():
     def R_behaviour(species, params):
         ## unpack params
         D, rho_n, Dc, rc, w, rho_A, Da, Dt = params
-        r = Dc * hf.leaky_hill(s=species['T'], K=0.85, lam=2, max=1e2, min=1) * hf.ficks(species['R'], w) + species['R'] * hf.leaky_hill(s=species['N'], K=0.15, lam = 1, max=rc, min=0)
+        r = Dc * hf.leaky_hill(s=species['T'], K=0.5, lam=2, max=1e2, min=1) * hf.ficks(species['R'], w) + species['R'] * hf.leaky_hill(s=species['N'], K=0.15, lam = 1, max=rc, min=0)
         #r = Dc * hf.leaky_hill(s=species['T'], K=1, lam=2, max=1e2, min=1) * hf.ficks(species['R'], w) + rc * species['N'] * species['R']
         return r
     R.set_behaviour(R_behaviour)
@@ -95,8 +94,8 @@ def main():
     def A_behaviour(species, params):
         ## unpack params
         D, rho_n, Dc, rc, w, rho_A, Da, Dt = params
-        a = Da * hf.ficks(species['A'], w) + hf.leaky_hill(s=species['R'], K=1, lam=2, max=rho_A, min=0)
-        #a = Da * hf.ficks(species['A'], w) + rho_A * species['R']
+        #a = Da * hf.ficks(species['A'], w) + hf.leaky_hill(s=species['T'], K=1, lam=2, max=rho_A, min=0)
+        a = Da * hf.ficks(species['A'], w) + rho_A * species['R']
         #a = 0
         return a
     A.set_behaviour(A_behaviour)

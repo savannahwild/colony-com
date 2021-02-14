@@ -45,7 +45,7 @@ def main():
     def R_behaviour(species, params):
         ## unpack params
         D, rho_n, Dc, rc, w, rho_A, Da, Dt = params
-        r = Dc * hf.leaky_hill(s=species['T'], K=0.1, lam=2, max=1e2, min=1) * hf.ficks(species['R'], w) + species['R'] * hf.leaky_hill(s=species['N'], K=0.15, lam = 1, max=rc, min=0)
+        r = Dc * hf.leaky_hill(s=species['T'], K=0.5, lam=2, max=1e2, min=1) * hf.ficks(species['R'], w) + species['R'] * hf.leaky_hill(s=species['N'], K=0.15, lam = 1, max=rc, min=0)
         #r = Dc * hf.ficks(species['R'], w) + rc * species['N'] * species['R']
         return r
     R.set_behaviour(R_behaviour)
@@ -74,7 +74,8 @@ def main():
     def A_behaviour(species, params):
         ## unpack params
         D, rho_n, Dc, rc, w, rho_A, Da, Dt = params
-        a = Da * hf.ficks(species['A'], w) + hf.leaky_hill(s=species['R'], K=1e-4, lam=2, max=rho_A, min=0) #rho_n * species['N'] * (species['R'])#rho_A * species['R']
+        #a = Da * hf.ficks(species['A'], w) + hf.leaky_hill(s=species['R'], K=1e-4, lam=2, max=rho_A, min=0) #rho_n * species['N'] * (species['R'])#rho_A * species['R']
+        a = Da * hf.ficks(species['A'], w) + rho_A * species['R']
         #a = 0
         return a
     A.set_behaviour(A_behaviour)
