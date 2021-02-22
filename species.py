@@ -16,5 +16,3 @@ class Species:
 
     def set_behaviour(self, behaviour):
         self.behaviour = behaviour
-
-    
