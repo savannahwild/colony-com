@@ -68,20 +68,12 @@ class Plate:
     
 
     
-    def plot_simulation(self, sim, bacteria, timepoints):
+    def plot_simulation(self, sim, timepoints):
         tps = np.linspace(0, sim.shape[3] - 1, timepoints)
-        x = []
-        y_top = []
-        y_bottom = []
-        conc_top = 0
-        conc_bottom = 0
-        #fig, axs = plt.subplots(int(np.ceil(len(self.species) / 3)), 3, sharex='all', sharey='all')
-        fig, axs = plt.subplots(int(np.ceil(len(self.species) / 3)), 3)
         for tp in tps:
+            fig, axs = plt.subplots(int(np.ceil(len(self.species) / 3)), 3, sharex='all', sharey='all')
             tp = int(tp)
-            x.append(tp)
             for idx, (ax, s) in enumerate(zip(axs.flatten(), self.species)):
-            # for idx, s in enumerate(self.species):
                 im = ax.imshow(sim[idx, :, :, tp], interpolation="none",
                                      cmap=cm.viridis, vmin=0,
                                vmax=np.max(sim[idx, :, :, :]))
@@ -89,23 +81,34 @@ class Plate:
                 divider = make_axes_locatable(ax)
                 cax = divider.append_axes("right", size="5%", pad=0.05)
                 fig.colorbar(im, cax=cax, shrink=0.8)
-                if s.get_name()== "S":
-                    for i in range(0, 29):
-                        for j in range(0, 59):
-                            conc_top += sim[idx, i, j, tp]
-                if s.get_name()== "S":
-                    for i in range(30, 59):
-                        for j in range(0, 59):
-                            conc_bottom += sim[idx, i, j, tp]   
-            y_top.append(conc_top/3600)
-            y_bottom.append(conc_bottom/3600)
-            #if tp == tps[3]:
-            axs[2].plot(x, y_top)
-            axs[2].plot(x, y_bottom)
-            axs[2].set_xlabel("fig_timepoint_")
-            axs[2].set_ylabel("concentration of S")
             fig.savefig('fig_timepoint_' + str(tp) +'.pdf')
             fig.show()
+    
+    def plot_conc_distribution(self, sim, bacteria, timepoints):
+        tps = np.linspace(0, sim.shape[3] - 1, timepoints)
+        x = []
+        y_top = []
+        y_bottom = []
+        fig, axs = plt.subplots(1, 2)
+        for tp in tps:
+            conc_top = 0
+            conc_bottom = 0
+            tp = int(tp)
+            x.append(tp)
+            for idx, s in enumerate(self.species):
+                if s.get_name()== bacteria.get_name():
+                    for j in range(0, self.size[0]):
+                        for i in range(0, 29):
+                            conc_top += sim[idx, i, j, tp]
+                        for i in range(31, self.size[0]):
+                            conc_bottom += sim[idx, i, j, tp]   
+            y_top.append(conc_top/1800)
+            y_bottom.append(conc_bottom/1800)
+        axs[1].plot(x, y_top)
+        axs[1].plot(x, y_bottom)
+        axs[1].set_xlabel("fig_timepoint_")
+        axs[1].set_ylabel("concentration of S")
+        fig.show()
         
     def plot_plate(self):
         print("plotting plate")

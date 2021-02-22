@@ -27,14 +27,14 @@ def main():
     def N_behaviour(species, params):
         ## unpack params
         D, rho_n, Dc, rc, w = params
-        n = D * hf.ficks(species['N'], w) - (species['S']**2) * rho_n * hf.leaky_hill(s=species['N'], K=0.15, lam=1, max=rc, min=0)
+        n = D * hf.ficks(species['N'], w) - species['S'] * rho_n * hf.leaky_hill(s=species['N'], K=0.15, lam=1, max=rc, min=0)
         return n
     N.set_behaviour(N_behaviour)
     plate.add_species(N)
 
 ## add sender strain to the plate
     U_S = np.zeros(environment_size)
-    for i in np.linspace(29, 29, 1):
+    for i in np.linspace(30, 30, 1):
         U_S[int(i), int(i)] = 0.001
     S = Species("S", U_S)
     def S_behaviour(species, params):
@@ -47,16 +47,14 @@ def main():
 
 ## run the experiment
     params = (D, rho_n, Dc, rc, w)
-    sim = plate.run(t_final = 150*60,
+    sim = plate.run(t_final = 200*60,
                     dt = 2.,
                     params = params)
-    print("run simulation")
     
-## plotting
-    plate.plot_simulation(sim, S, 4)
-#graph
-    print("plot graph")   
-    #plate.graph(S, sim, 4)
+    print("run simulation")
+    plate.plot_simulation(sim, 8)
 
+    print("plot conc dist")   
+    plate.plot_conc_distribution(sim, S, 8)
 
 main()
