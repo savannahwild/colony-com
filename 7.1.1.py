@@ -35,7 +35,7 @@ def main():
 ## add sender strain to the plate
     U_S = np.zeros(environment_size)
     for i in np.linspace(30, 30, 1):
-        U_S[int(i), int(i)] = 0.001
+        U_S[int(i), int(i)] = 1
     S = Species("S", U_S)
     def S_behaviour(species, params):
         ## unpack params
@@ -52,9 +52,12 @@ def main():
                     params = params)
     
     print("run simulation")
-    plate.plot_simulation(sim, 8)
+    plate.plot_simulation(sim, 10)
 
-    print("plot conc dist")   
-    plate.plot_conc_distribution(sim, S, 8)
+    print("plot conc dist")
+    S = plate.get_all_species()
+    plate.plot_conc_distribution(sim, S, 10, 4)
+    
+    plate.compare_species(sim, 8)
 
 main()
