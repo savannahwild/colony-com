@@ -1,9 +1,15 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Feb 24 22:05:57 2021
+
+@author: savan
+"""
+
 import matplotlib.pyplot as plt
 from matplotlib import cm
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 import numpy as np
 from scipy.integrate import solve_ivp
-import math
 
 class Plate:
     def __init__(self, size):
@@ -85,43 +91,55 @@ class Plate:
             fig.savefig('fig_timepoint_' + str(tp) +'.pdf')
             fig.show()
     
-    def plot_conc_distribution(self, sim, species, timepoints, sections):
+    
+    
+    
+    def plot_conc_distribution(self, sim, species, timepoints):
         tps = np.linspace(0, sim.shape[3] - 1, timepoints)
         fig, axs = plt.subplots(1, len(species))
-        newsecs = int(math.sqrt(sections))
         for idx, s in enumerate(species):
-            ji = []
-            jj = []
-            count = 0
-            for sectionx in range(0, newsecs-1):
-                i1 = int(sectionx*(self.size[0]/newsecs))
-                i2 = int(sectionx+(self.size[0]/newsecs)-1)
-                ji.append(i1) #[0, 20, 40]
-                jj.append(i2) #[19, 39, 59]
-            for sectiony in range(0, int(newsecs-1)):    #[0,0, 0, 20, 20, 20, 40, 40, 40, 40]#[19, 39, 59]
-                for i in range(ji[sectiony], jj[sectiony]):
-                    for jjj in range(0, newsecs-1):
-                        x = []
-                        y = []
-                        for tp in tps:
-                            tp = int(tp)
-                            x.append(tp)
-                            summ = 0
-                            for j in range(ji[jjj], jj[jjj]):
-                                summ += sim[idx, i, j, tp]
-                            y.append(summ)
-                        count += 1
-                        axs[idx].plot(x, y)
-                        print(count)
+            for n in range(0, 4):
+                y = []
+                x = []
+                #y[n].append(0)
+                for tp in tps:
+                    sum0 = 0
+                    sum1 = 0
+                    sum2 = 0
+                    sum3 = 0
+                    tp = int(tp)
+                    x.append(tp)
+                    if n == 0:
+                        for i in range(0, 30): 
+                            for j in range(0, 30):
+                                sum0 += sim[idx, i, j, tp]
+                        y.append(sum0)
+                    if n == 1:
+                        for i in range(0, 30): 
+                            for j in range(30, 60):
+                                sum1 += sim[idx, i, j, tp]
+                        y.append(sum1)
+                    if n == 2:
+                        for i in range(30, 60): 
+                            for j in range(0, 30):
+                                sum2 += sim[idx, i, j, tp]
+                        y.append(sum2)
+                    if n == 3:
+                        for i in range(30, 60): 
+                            for j in range(30, 60):
+                                sum3 += sim[idx, i, j, tp]
+                        y.append(sum3)
+                axs[idx].plot(x, y, label = 'quadrant' + str(n+1))
             axs[idx].set_xlabel("fig_timepoint_")
             axs[idx].set_ylabel("concentration of " + str(species[idx].get_name()))
-        fig.show()        
+            axs[idx].legend()
+            fig.show()        
                     
             
         
-    def compare_species(self, sim, timepoints):
+    def compare_species(self, sim, species, timepoints):
         tps = np.linspace(0, sim.shape[3] - 1, timepoints)
-        fig, axs = plt.subplots(1, 2)
+        fig, axs = plt.subplots(1, len(species))
         for idx, s in enumerate(self.species):
             y = []
             x = []
@@ -132,9 +150,9 @@ class Plate:
                 for i in range(0, self.size[0]):
                     for j in range(0, self.size[1]):
                         y[pos] += sim[idx, i, j, tp]
-            axs[1].plot(x, y)
-            axs[1].set_xlabel("fig_timepoint_")
-            axs[1].set_ylabel("concentration")
+            axs[idx].plot(x, y)
+            axs[idx].set_xlabel("fig_timepoint_")
+            axs[idx].set_ylabel("concentration")
             fig.show()
         
     def plot_plate(self):
