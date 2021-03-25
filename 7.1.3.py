@@ -4,7 +4,7 @@ Created on Mon Mar 15 22:03:17 2021
 
 @author: savan
 """
-#Different yields ie different nutrieny
+#Basic model, Different yield vals
 
 from plate import Plate
 from species import Species

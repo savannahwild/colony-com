@@ -4,7 +4,7 @@ Created on Wed Feb 24 23:57:17 2021
 
 @author: savan
 """
-# inducer as a block
+#inducer as a block, no diffusion
  
 from plate import Plate
 from species import Species

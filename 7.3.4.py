@@ -5,7 +5,7 @@ Created on Tue Mar 23 16:42:31 2021
 @author: savan
 """
 
-#inducer as gradient 
+#inducer as gradient + diffusion 
 
 from plate import Plate
 from species import Species

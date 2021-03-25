@@ -5,7 +5,7 @@ Created on Thu Feb 11 13:42:37 2021
 
 @author: savan
 """
-#ahl production
+#ahl production, receiver on plate but no detection
 
 from plate import Plate
 from species import Species

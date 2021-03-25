@@ -5,7 +5,7 @@ Created on Tue Mar 23 17:48:36 2021
 @author: savan
 """
 
-#different bacteria concs
+#effect of different bacteria ratios
 
 from plate import Plate
 from species import Species

@@ -4,7 +4,7 @@ Created on Thu Feb 11 11:41:10 2021
 
 @author: savan
 """
-#Different inital conc S
+#Basic model, Different inital conc S
 
 from plate import Plate
 from species import Species

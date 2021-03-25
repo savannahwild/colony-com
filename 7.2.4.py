@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 """
-Created on Tue Mar 23 09:57:35 2021
+Created on Mon Mar 15 23:32:40 2021
 
 @author: savan
 """
-
-#target everywhere to show motility not growth affected
+#target everywhere final conc to use
 
 from plate import Plate
 from species import Species
@@ -15,25 +14,26 @@ import matplotlib.pyplot as plt
 
 def main():
     ## experimental parameters
-    D = 3E-3        # nutrient diffusion coeff (#mm2/min)
-    rho_n = 0.3     # consumption rate of nutrients by X
-    rc = 3.5E-2       # growth rate of X on N
+    D = 3E-3        #nutrient diffusion coeff (#mm2/min)
+    rho_n = 0.3     #consumption rate of nutrients by X
+    rc = 3.5E-2       #growth rate of X on N
     Dc = 1E-5       # cell diffusion coefficient
-    w = 1   
-    Da = 0.03   #0.05 1/sec
-    rho_A = 0.1       # production rate of AHL synthesis rate 3,300nM/hr: degradation rate 0.108/hour
-    Dt = 0     #random difusion rate of target molecule #K 25 - 50 nM AHL
-
+    w = 1
+    Da = 0.03
+    rho_A = 0.1       # production rate of AHL
+    Dt = 0    #random difusion rate of target molecule
     environment_size = (59, 59)
     colours = ['b', 'r', 'g', 'y', 'k']
-    concs = [0,1]
+    concs = np.linspace(0,10,2)
     fig, axs = plt.subplots(1,3)
     plt.suptitle('Change in concentration of species over time with inducer present')
-
+    #fig2, axs2 = plt.subplots(1, 2)
+    #plt.suptitle('Change in concentration of species over time in each plate quadrant with inducer present')
+    
     def S_behaviour(species, params):
             ## unpack params
             D, rho_n, Dc, rc, w, rho_A, Da, Dt = params
-            s = Dc*hf.ficks(species['S'], w)*hf.leaky_hill(s=species['T'], K=0.6, lam = 2, max=3.96, min=1.68) + species['S']*hf.leaky_hill(s=species['N'], K=0.15, lam = 1, max=rc, min=0)
+            s = Dc*hf.ficks(species['S'], w)*hf.leaky_hill(s=species['T'], K=0.6, lam=2, max=3.96, min=1.68) + species['S'] * hf.leaky_hill(s=species['N'], K=0.15, lam = 1, max=rc, min=0)
             return s
     def T_behaviour(species, params):
             ## unpack params
@@ -49,14 +49,16 @@ def main():
         
     for col, conc in enumerate(concs):
         plate = Plate(environment_size)
-    
+        
         ## add nutrient to the plate
         U_N = np.ones(environment_size)
+      
         N = Species("N", U_N)
         
         N.set_behaviour(N_behaviour)
         plate.add_species(N)
         
+
         ## add sender strain to the plate
         U_S = np.zeros(environment_size)
         for i in np.linspace(29, 29, 1):
@@ -77,17 +79,15 @@ def main():
         plate.add_species(T)
         ## run the experiment
         params = (D, rho_n, Dc, rc, w, rho_A, Da, Dt)
-        sim = plate.run(t_final = 150*60, #hours times 60
+        sim = plate.run(t_final = 150*60,
                         dt = 1.,
                         params = params)
-        print("run simulation")
 
-        #plate.plot_simulation(sim, 10)
- 
+        #plate.plot_simulation(sim, 3)
+
         S = plate.get_all_species()
+        #plate.plot_conc_distribution(sim, S, 10)
         colour = colours[col]
-        
-        #plate.plot_conc_distribution(sim, S, 10, fig, axs, colour)
         plate.compare_species(sim, S, 10, fig, axs, colour)
     fig.legend(labels=concs, title='Initial concentration of inducer')
     fig.show()

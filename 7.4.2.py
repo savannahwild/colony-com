@@ -4,7 +4,7 @@ Created on Mon Mar  8 10:28:51 2021
 
 @author: savan
 """
-#ahl production + receiver motility
+#ahl production + receiver detection and induced motility
 
 from plate import Plate
 from species import Species

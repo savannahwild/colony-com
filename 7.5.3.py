@@ -5,7 +5,7 @@ Created on Tue Mar 23 17:51:05 2021
 @author: savan
 """
 
-#Group cohesion
+#AHL detection in sender, for group cohesion
 
 from plate import Plate
 from species import Species

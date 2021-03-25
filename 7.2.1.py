@@ -4,7 +4,7 @@ Created on Mon Mar 15 23:46:11 2021
 
 @author: savan
 """
-#chez max and min motility
+#show max and min motility
 
 from plate import Plate
 from species import Species

@@ -5,7 +5,7 @@ Created on Tue Mar 16 01:16:51 2021
 @author: savan
 """
 
-#inducer as point/line 
+#inducer as point/line , no diffusion
 
 from plate import Plate
 from species import Species

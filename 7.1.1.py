@@ -4,7 +4,7 @@ Created on Mon Mar 15 12:32:07 2021
 
 @author: savan
 """
-#Different ratio of nutrient and species
+#Basic model, N and S
 
 from plate import Plate
 from species import Species

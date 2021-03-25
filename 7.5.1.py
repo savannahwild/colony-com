@@ -4,7 +4,7 @@ Created on Tue Mar 23 17:47:08 2021
 
 @author: savan
 """
-#different ahl production
+#effect of different ahl production rates
 
 from plate import Plate
 from species import Species

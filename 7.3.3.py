@@ -7,8 +7,6 @@ Created on Mon Mar  8 10:13:51 2021
 
 #inducer as diffusable block
 
-# inducer as a block
- 
 from plate import Plate
 from species import Species
 import numpy as np

@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 """
-Created on Mon Mar 15 23:32:40 2021
+Created on Thu Jan 21 19:13:54 2021
 
 @author: savan
 """
-#target everywhere final conc
+#target everywhere using found minimum and maximum motility
 
 from plate import Plate
 from species import Species
@@ -24,7 +24,7 @@ def main():
     Dt = 0    #random difusion rate of target molecule
     environment_size = (59, 59)
     colours = ['b', 'r', 'g', 'y', 'k']
-    concs = np.linspace(0,10,2)
+    concs = np.linspace(0,9.12,5)
     fig, axs = plt.subplots(1,3)
     plt.suptitle('Change in concentration of species over time with inducer present')
     #fig2, axs2 = plt.subplots(1, 2)
@@ -84,10 +84,11 @@ def main():
                         params = params)
 
         #plate.plot_simulation(sim, 3)
-
+    
+        #print("plot conc dist")
         S = plate.get_all_species()
-        #plate.plot_conc_distribution(sim, S, 10)
         colour = colours[col]
+        #plate.plot_conc_distribution(sim, S, 10)
         plate.compare_species(sim, S, 10, fig, axs, colour)
     fig.legend(labels=concs, title='Initial concentration of inducer')
     fig.show()
