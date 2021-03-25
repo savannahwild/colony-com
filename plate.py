@@ -94,52 +94,46 @@ class Plate:
     
     
     
-    def plot_conc_distribution(self, sim, species, timepoints):
+    def plot_conc_distribution(self, sim, species, timepoints, fig, axs, colour):
         tps = np.linspace(0, sim.shape[3] - 1, timepoints)
-        fig, axs = plt.subplots(1, len(species))
-        for idx, s in enumerate(species):
+        liness = ['-','--',':','-.']
+        for idx, s in enumerate(self.species):
             for n in range(0, 4):
+                #print(n)
                 y = []
                 x = []
                 #y[n].append(0)
-                for tp in tps:
-                    sum0 = 0
-                    sum1 = 0
-                    sum2 = 0
-                    sum3 = 0
+                for pos, tp in enumerate(tps):
+                    y.append(0)
                     tp = int(tp)
                     x.append(tp)
                     if n == 0:
-                        for i in range(0, 30): 
-                            for j in range(0, 30):
-                                sum0 += sim[idx, i, j, tp]
-                        y.append(sum0)
+                        for i in range(0, 29): 
+                            for j in range(0, 29):
+                                y[pos] += sim[idx, i, j, tp]
                     if n == 1:
-                        for i in range(0, 30): 
-                            for j in range(30, 60):
-                                sum1 += sim[idx, i, j, tp]
-                        y.append(sum1)
+                        for i in range(0, 29): 
+                            for j in range(30, 59):
+                                y[pos] += sim[idx, i, j, tp]
                     if n == 2:
-                        for i in range(30, 60): 
-                            for j in range(0, 30):
-                                sum2 += sim[idx, i, j, tp]
-                        y.append(sum2)
+                        for i in range(30, 59): 
+                            for j in range(0, 29):
+                                y[pos] += sim[idx, i, j, tp]
                     if n == 3:
-                        for i in range(30, 60): 
-                            for j in range(30, 60):
-                                sum3 += sim[idx, i, j, tp]
-                        y.append(sum3)
-                axs[idx].plot(x, y, label = 'quadrant' + str(n+1))
+                        for i in range(30, 59): 
+                            for j in range(30, 59):
+                                y[pos] += sim[idx, i, j, tp]
+                axs[idx].plot(x, y, colour, label = 'quadrant ' + str(n+1), linestyle=liness[n])
             axs[idx].set_xlabel("fig_timepoint_")
-            axs[idx].set_ylabel("concentration of " + str(species[idx].get_name()))
+            axs[idx].set_ylabel("concentration of " + str(s.get_name()))
+            axs[idx].set_title(str(s.get_name()))
             axs[idx].legend()
-            fig.show()        
+            #fig.show()        
                     
             
         
-    def compare_species(self, sim, species, timepoints):
+    def compare_species(self, sim, species, timepoints, fig, axs, colour):
         tps = np.linspace(0, sim.shape[3] - 1, timepoints)
-        fig, axs = plt.subplots(1, len(species))
         for idx, s in enumerate(self.species):
             y = []
             x = []
@@ -150,11 +144,12 @@ class Plate:
                 for i in range(0, self.size[0]):
                     for j in range(0, self.size[1]):
                         y[pos] += sim[idx, i, j, tp]
-            axs[idx].plot(x, y)
+            axs[idx].plot(x, y, colour)
             axs[idx].set_xlabel("fig_timepoint_")
-            axs[idx].set_ylabel("concentration")
-            fig.show()
-        
+            axs[idx].set_ylabel("concentration of " + str(s.get_name()))
+            axs[idx].set_title(str(s.get_name()))
+      
+    #not sued
     def plot_plate(self):
         print("plotting plate")
         fig, axs = plt.subplots(int(np.ceil(len(self.species) / 3)), 3, sharex='all', sharey='all')
@@ -167,4 +162,4 @@ class Plate:
             fig.colorbar(im, cax=cax, shrink=0.8)
 
         fig.savefig('fig.pdf')
-        fig.show()
+        #fig.show()
