@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 """
-Created on Tue Mar 23 17:48:36 2021
+Created on Sun Mar 28 22:04:36 2021
 
 @author: savan
 """
-
-#effect of different bacteria ratios
+#group + majority minority 
 
 from plate import Plate
 from species import Species
@@ -29,7 +28,7 @@ def main():
     #fig, axs = plt.subplots(1,5)
     fig2, axs2 = plt.subplots(1,5)
     colours = ['b', 'r', 'g', 'y', 'k','m','c']
-    concs=np.linspace(0,3,7)
+    concs=np.linspace(1,5,5)
     for col, conc in enumerate(concs):
                 
         plate = Plate(environment_size)
@@ -53,7 +52,7 @@ def main():
         def S_behaviour(species, params):
             ## unpack params
             D, rho_n, Dc, rc, w, rho_A, Da, Dti = params
-            s = Dc * hf.ficks(species['S'], w)*hf.leaky_hill(s=species['T'], K=0.6, lam=2, max=3.96, min=1.68) + species['S']*hf.leaky_hill(s=species['N'], K=0.15, lam = 1, max=rc, min=0)
+            s = Dc * hf.ficks(species['S'], w)*hf.leaky_hill(s=species['T']+species['A'], K=0.6, lam=2, max=3.96, min=1.68) + species['S']*hf.leaky_hill(s=species['N'], K=0.15, lam = 1, max=rc, min=0)
             return s
         S.set_behaviour(S_behaviour)
         plate.add_species(S)

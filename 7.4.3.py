@@ -102,10 +102,10 @@ def main():
                     params = params)
     
 
-   #plate.plot_simulation(sim, 10)
+    plate.plot_simulation(sim, 10)
     colour = 'b'
     S = plate.get_all_species()
-    plate.plot_conc_distribution(sim, S, 10,fig,axs,colour)
-    plate.compare_species(sim, S, 10,fig2,axs2,colour)
+    #plate.plot_conc_distribution(sim, S, 10,fig,axs,colour)
+    #plate.compare_species(sim, S, 10,fig2,axs2,colour)
 
 main()

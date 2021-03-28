@@ -50,7 +50,7 @@ def main():
     def S_behaviour(species, params):
         ## unpack params
         D, rho_n, Dc, rc, w, rho_A, Da, Dti = params
-        s = Dc * hf.ficks(species['S'], w)*hf.leaky_hill(s=species['T'], K=0.6, lam=2, max=3.96, min=1.68) + species['S']*hf.leaky_hill(s=species['N'], K=0.15, lam = 1, max=rc, min=0)
+        s = Dc*hf.ficks(species['S'], w)*hf.leaky_hill(s=species['T']+species['A'], K=0.6, lam=2, max=3.96, min=1.68) + species['S']*hf.leaky_hill(s=species['N'], K=0.15, lam = 1, max=rc, min=0)
         return s
     S.set_behaviour(S_behaviour)
     plate.add_species(S)
@@ -75,7 +75,7 @@ def main():
     def A_behaviour(species, params):
         ## unpack params
         D, rho_n, Dc, rc, w, rho_A, Da, Dt = params
-        a = Da * hf.ficks(species['A'], w) + rho_A*species['S']
+        a = Da*hf.ficks(species['A'], w) + rho_A*species['S']
         return a
     A.set_behaviour(A_behaviour)
     plate.add_species(A)

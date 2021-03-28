@@ -60,7 +60,7 @@ def main():
     
     
     print("run simulation")
-    plate.plot_simulation(sim, 3)
+    plate.plot_simulation(sim, 10)
 
     print("plot conc dist")
     S = plate.get_all_species()
