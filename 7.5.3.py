@@ -16,10 +16,10 @@ import matplotlib.pyplot as plt
 def main():
     
 ## experimental parameters
-    D = 3E-3        # nutrient diffusion coeff (#mm2/min) maybe?
+    D = 3E-3        #nutrient diffusion coeff (#mm2/min) maybe?
     rho_n = 0.3     #consumption rate of nutrients by X calc?
     rc = 1E-2     # growth rate of X divisions is max 0.0352
-    Dc = 1E-5       # cell diffusion coefficient? calc that 0.03
+    Dc = 1E-5       #cell diffusion coefficient? calc that 0.03
     w = 1           #w = time?
     Da = 0.0294     #mm2/min
     rho_A = 0.01    #production rate of AHL

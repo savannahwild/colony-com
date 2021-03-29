@@ -25,12 +25,12 @@ def main():
     Dti = 6e-2    #diffusion rate of target? changec
 
     environment_size = (59, 59)
-    #fig, axs = plt.subplots(1,5)
-    fig2, axs2 = plt.subplots(1,5)
+    
+    #fig2, axs2 = plt.subplots(1,5)
     colours = ['b', 'r', 'g', 'y', 'k','m','c']
     
     for col, rho_A in enumerate(rho_As):
-                
+        fig,axs = plt.subplots(1,1)        
         plate = Plate(environment_size)
         
         ##add nutrient to the plate
@@ -105,7 +105,7 @@ def main():
         #plate.plot_simulation(sim, 10)
         S = plate.get_all_species()
 
-        #plate.plot_conc_distribution(sim, S, 10,fig,axs,colour)
-        plate.compare_species(sim, S, 10,fig2,axs2,colour)
-    plt.legend(rho_As)
+        plate.plot_conc_distribution(sim, S, 10,fig,axs,colour)
+        #plate.compare_species(sim, S, 10,fig2,axs2,colour)
+    #plt.legend(rho_As)
 main()

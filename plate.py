@@ -73,8 +73,6 @@ class Plate:
 
         return sim_ivp
     
-
-    
     def plot_simulation(self, sim, timepoints):
         tps = np.linspace(0, sim.shape[3] - 1, timepoints)
         for tp in tps:
@@ -90,45 +88,41 @@ class Plate:
                 fig.colorbar(im, cax=cax, shrink=0.8)
             fig.savefig('fig_timepoint_' + str(tp) +'.pdf')
             fig.show()
+
     
-    
-    
-    
-    def plot_conc_distribution(self, sim, species, timepoints, fig, axs, colour):
+    def plot_conc_distribution(self, sim, species, timepoints, fig, axs,colour):
         tps = np.linspace(0, sim.shape[3] - 1, timepoints)
-        liness = ['-','--',':','-.']
+        #section=['upper half','lower half']
+        x=np.arange(5)  
+        y=[]
+        y1=[]
+        y2=[]
+        tp = int(tps[5])
+        labels=[]
         for idx, s in enumerate(self.species):
-            for n in range(0, 4):
-                #print(n)
-                y = []
-                x = []
-                #y[n].append(0)
-                for pos, tp in enumerate(tps):
-                    y.append(0)
-                    tp = int(tp)
-                    x.append(tp)
-                    if n == 0:
-                        for i in range(0, 29): 
-                            for j in range(0, 29):
-                                y[pos] += sim[idx, i, j, tp]
-                    if n == 1:
-                        for i in range(0, 29): 
-                            for j in range(30, 59):
-                                y[pos] += sim[idx, i, j, tp]
-                    if n == 2:
-                        for i in range(30, 59): 
-                            for j in range(0, 29):
-                                y[pos] += sim[idx, i, j, tp]
-                    if n == 3:
-                        for i in range(30, 59): 
-                            for j in range(30, 59):
-                                y[pos] += sim[idx, i, j, tp]
-                axs[idx].plot(x, y, colour, label = 'quadrant ' + str(n+1), linestyle=liness[n])
-            axs[idx].set_xlabel("fig_timepoint_")
-            axs[idx].set_ylabel("concentration of " + str(s.get_name()))
-            axs[idx].set_title(str(s.get_name()))
-            axs[idx].legend()
-            #fig.show()        
+        #for pos, tp in enumerate(tps):
+            #x=0
+            y1.append(0)
+            for i in range(0, 29): 
+                for j in range(0, 59):
+                    y1[idx]+=sim[idx, i, j, tp]                   
+            y2.append(0)
+            for i in range(30, 59): 
+                for j in range(0, 59):
+                    y2[idx] += sim[idx, i, j, tp]
+            y.append(y1)
+            y.append(y2)                   
+            labels.append(s.get_name())
+        axs.bar(x, y[0],width=0.25,color='b',label='upper')
+        axs.bar(x+0.25,y[1],width=0.25,color='g',label='lower')
+        axs.set_xticks(x)
+        axs.set_xticklabels(labels)
+        axs.set_title('Concentration distribution')
+        axs.legend()
+        axs.set_xlabel('Species')
+        axs.set_ylabel('Conc')
+        
+        fig.show()        
                     
             
         
