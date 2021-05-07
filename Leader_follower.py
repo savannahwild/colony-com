@@ -4,9 +4,8 @@ Created on Mon Apr 12 10:00:35 2021
 
 @author: savan
 """
-#7.5.3
-#effect of different bacteria ratios
-#minority sender
+#different ratios of sender:receiver initial concentration
+#effect of different bacteria ratios on the leader-follower relationship
 
 from plate import Plate
 from species import Species

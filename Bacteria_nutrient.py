@@ -4,9 +4,9 @@ Created on Mon Mar 15 12:32:07 2021
 
 @author: savan
 """
-#Basic model, N and S
-#6 simulation
-#7 growth rate
+#Basic model, Nutrient and Sender bacteria
+# plots simulation
+# plot growth rate graph
 
 from plate import Plate
 from species import Species

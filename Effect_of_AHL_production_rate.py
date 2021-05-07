@@ -5,8 +5,7 @@ Created on Mon Apr 12 10:24:27 2021
 @author: savan
 """
 
-#7.4.4 
-# effect of different ahl production rates
+# effect of different ahl production rates on motility induction in receiver group
 
 from plate import Plate
 from species import Species

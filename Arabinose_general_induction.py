@@ -4,7 +4,7 @@ Created on Mon Mar 15 23:32:40 2021
 
 @author: savan
 """
-#introduction of target everywhere, different concs
+#introduction of arabinose everywhere on plate
 
 from plate import Plate
 from species import Species

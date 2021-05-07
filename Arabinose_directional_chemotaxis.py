@@ -5,7 +5,8 @@ Created on Thu Jan 21 17:38:20 2021
 @author: savan
 """
 
-#ahl production + receiver chemotaxis + gradient of inducer for sender chemotaxis
+#ahl production from sender + induced receiver motility via chemotaxis 
+#gradient of inducer arabinose for sender directional chemotaxis
 
 from plate import Plate
 from species import Species

@@ -4,7 +4,8 @@ Created on Tue May  4 01:43:46 2021
 
 @author: savan
 """
-
+#AHL detection in sender as well as receiver group
+#For group cohesion and collective motiility
 from plate import Plate
 from species import Species
 import numpy as np
@@ -99,7 +100,6 @@ def main():
     sim = plate.run(t_final = 200*60,
                     dt = 1.,
                     params = params)
-    
 
     plate.plot_simulation(sim, 3)
     idx=0

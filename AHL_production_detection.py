@@ -4,8 +4,7 @@ Created on Mon Mar  8 10:28:51 2021
 
 @author: savan
 """
-#ahl production + receiver detection and induced motility
-#conc dis and compare
+#ahl production from sender strain + receiver detection and induced motility in receiver
 
 from plate import Plate
 from species import Species

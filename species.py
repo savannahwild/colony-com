@@ -1,3 +1,5 @@
+#Species class
+#Define behaviour
 
 class Species:
     def __init__(self, name, U):

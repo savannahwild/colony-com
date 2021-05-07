@@ -4,6 +4,7 @@ Created on Tue May  4 09:12:56 2021
 
 @author: savan
 """
+#Low concentration of sender in the presence of receiver swarming patterning
 
 from plate import Plate
 from species import Species
@@ -58,7 +59,7 @@ def main():
     U_R = np.zeros(environment_size)
     for i in np.linspace(29, 29, 1):
         for j in np.linspace(29,29, 1):
-            U_R[int(i), int(j)] = 0
+            U_R[int(i), int(j)] = 0.001
     R = Species("R", U_R)
     def R_behaviour(species, params):
         ## unpack params

@@ -4,7 +4,7 @@ Created on Thu Feb 11 11:41:10 2021
 
 @author: savan
 """
-#Basic model, sender majority
+#Basic model with sender group as a minority
 
 from plate import Plate
 from species import Species

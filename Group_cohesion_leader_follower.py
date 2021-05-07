@@ -4,6 +4,8 @@ Created on Tue May  4 09:07:52 2021
 
 @author: savan
 """
+#Different sender:receiver initial concentration
+#Formation of leader-follower relationship
 
 from plate import Plate
 from species import Species

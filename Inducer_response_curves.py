@@ -4,7 +4,7 @@ Created on Mon Mar 15 23:46:11 2021
 
 @author: savan
 """
-#show max and min motility
+#show maximum and mininum motility in presence of increasing concentrations of the inducer AHL or arabinose
 
 from plate import Plate
 from species import Species

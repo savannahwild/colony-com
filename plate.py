@@ -4,7 +4,8 @@ Created on Wed Feb 24 22:05:57 2021
 
 @author: savan
 """
-
+#Class Plate
+#Simulation, growth rate plot, concentration distribution plot
 import matplotlib.pyplot as plt
 from matplotlib import cm
 from mpl_toolkits.axes_grid1 import make_axes_locatable
