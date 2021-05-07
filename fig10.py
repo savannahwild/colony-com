@@ -1,44 +1,43 @@
-
 # -*- coding: utf-8 -*-
 """
-Created on Thu Feb 11 13:42:37 2021
+Created on Mon Mar  8 10:28:51 2021
 
 @author: savan
 """
-#ahl production, receiver on plate but no detection
+#ahl production + receiver detection and induced motility
+#conc dis and compare
 
 from plate import Plate
 from species import Species
 import numpy as np
 import helper_functions as hf
-import matplotlib.pyplot as plt
 
 def main():
     
 ## experimental parameters
-    D = 3E-3        # nutrient diffusion coeff (#mm2/min) maybe?
-    rho_n = 0.3     #consumption rate of nutrients by X calc?
-    rc = 3.5E-2    # growth rate of X divisions is max 0.0352
-    Dc = 1E-5       # cell diffusion coefficient? calc that 0.03
-    w = 1           #w = time?
-    Da = 0.0294     #mm2/min
-    rho_A = 0.01    #production rate of AHL
-    Dt = 6e-2    #diffusion rate of target? change
+    D = 0.03
+    rho_n = 0.5     
+    rc = 3.33e-2 #6e-4
+    Dc = 1e-5       
+    w = 0.75 
+    Da = 2.94e-6
+    rho_A = 0.01    
+    Dt = 0  
 
     environment_size = (59, 59)
     plate = Plate(environment_size)
-    fig, axs = plt.subplots(1,1)
-    labels=['upper half','lower half']
-    fig2, axs2 = plt.subplots(1,4)
-    plt.suptitle('Change in concentration of species over time')
     
     ##add nutrient to the plate
-    U_N = np.ones(environment_size)
+    U_N = np.zeros(environment_size)
+    
+    for i in np.linspace(0, 58, 59):
+        for j in np.linspace(0,58,59):
+            U_N[int(i),int(j)]=100
     N = Species("N", U_N)
     def N_behaviour(species, params):
         ## unpack params
         D, rho_n, Dc, rc, w, rho_A, Da, Dt = params
-        n = D*hf.ficks(species['N'], w) - (species['R']+species['S'])*rho_n*hf.leaky_hill(s=species['N'], K=0.15, lam=1, max=rc, min=0) #rho_n * species['N'] * (species['R'])
+        n = D*hf.ficks(species['N'], w) - (species['R']+species['S'])*rho_n*hf.leaky_hill(s=species['N'], K=80, lam=1, max=rc, min=0) #rho_n * species['N'] * (species['R'])
         return n
     N.set_behaviour(N_behaviour)
     plate.add_species(N)
@@ -51,7 +50,7 @@ def main():
     def S_behaviour(species, params):
         ## unpack params
         D, rho_n, Dc, rc, w, rho_A, Da, Dt = params
-        s = Dc*hf.ficks(species['S'], w)*1.68 + species['S']*hf.leaky_hill(s=species['N'], K=0.15, lam = 1, max=rc, min=0)
+        s = Dc*hf.ficks(species['S'], w) + species['S']*hf.leaky_hill(s=species['N'], K=80, lam = 1, max=rc, min=0)
         return s
     S.set_behaviour(S_behaviour)
     plate.add_species(S)
@@ -65,11 +64,10 @@ def main():
     def R_behaviour(species, params):
         ## unpack params
         D, rho_n, Dc, rc, w, rho_A, Da, Dt = params
-        r = Dc*hf.ficks(species['R'], w)*1.68 + species['R']*hf.leaky_hill(s=species['N'], K=0.15, lam = 1, max=rc, min=0)
+        r = Dc*hf.ficks(species['R'], w)*hf.leaky_hill(s=species['A'], K=40e-9, lam=2, max=2.75, min=1) + species['R']*hf.leaky_hill(s=species['N'], K=80, lam = 1, max=rc, min=0)
         return r
     R.set_behaviour(R_behaviour)
     plate.add_species(R)
-    
     
     ##add AHL to plate
     U_A = np.zeros(environment_size)
@@ -84,15 +82,15 @@ def main():
     plate.add_species(A)
 
     params = (D, rho_n, Dc, rc, w, rho_A, Da, Dt)
-    sim = plate.run(t_final = 150*60,
+    sim = plate.run(t_final = 200*60,
                     dt = 1.,
                     params = params)
 
-    #plate.plot_simulation(sim, 3)
-    colour = 'b'
+    #plate.plot_simulation(sim, 10)
+
     S = plate.get_all_species()
-    plate.compare_species(sim, S, 10,fig2,axs2,colour)
-    plate.plot_conc_distribution(sim, S, 10,fig,axs,colour)
-    fig.legend(labels, title='Section of plate', loc='center right')
+    idx=0
+    #plate.plot_conc_target(sim, S, 10,idx)
+    plate.compare_species(sim, S, 10,idx)
 
 main()

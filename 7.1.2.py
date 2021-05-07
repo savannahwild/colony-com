@@ -31,6 +31,7 @@ def main():
     colours = ['b', 'r', 'g', 'y', 'k']
     fig, axs = plt.subplots(1, 2)
     plt.suptitle('Change in concentration of species over time, with varying initial concentration of sender')
+    plt.style.use('ggplot')
     concs = [0, 3/10, 1]
     
     def N_behaviour(species, params):
@@ -45,9 +46,12 @@ def main():
         D, rho_n, Dc, rc, w = params
         sp = Dc*hf.ficks(species['S'], w)*1.68 + species['S']*hf.leaky_hill(s=species['N'], K=0.15, lam = 1, max=rc, min=0)
         return sp
-       
+    fig2, axs2 = plt.subplots(1, 3)
     for col, conc in enumerate(concs):
+        
+        #plt.suptitle('Change in average concentration of each species over time in each plate quadrant')
         plate = Plate(environment_size)
+        
         
         U_N = np.ones(environment_size)
         N = Species("N", U_N)
@@ -69,13 +73,12 @@ def main():
                     dt = 1.,
                     params = params)
     
-        print("run simulation")
         #plate.plot_simulation(sim, 3)
-        #print("plot conc dist")
+      
         S = plate.get_all_species()
-        #plate.plot_conc_distribution(sim, Sp, 10)
         colour = colours[col]
+        #plate.plot_conc_distribution(sim, S, 10, fig2, axs2[col], colour)
         plate.compare_species(sim, S, 10, fig, axs, colour)
-    fig.legend(labels=concs, title='Initial concentration of S')
+    fig.legend(labels=concs, title='Initial concentration of S', loc='center right')
     fig.show()
 main()

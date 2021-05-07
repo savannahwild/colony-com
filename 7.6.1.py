@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 """
-Created on Thu Jan 21 17:38:20 2021
+Created on Tue Mar 23 17:51:05 2021
 
 @author: savan
 """
-
-#ahl production + receiver chemotaxis + gradient of inducer for sender chemotaxis
+#7.6.1
+#AHL detection in sender, for group cohesion
 
 from plate import Plate
 from species import Species
@@ -16,10 +16,10 @@ import matplotlib.pyplot as plt
 def main():
     
 ## experimental parameters
-    D = 3E-3        # nutrient diffusion coeff (#mm2/min) maybe?
+    D = 3E-3        #nutrient diffusion coeff (#mm2/min) maybe?
     rho_n = 0.3     #consumption rate of nutrients by X calc?
-    rc = 3.5E-2     # growth rate of X divisions is max 0.0352
-    Dc = 1E-5       # cell diffusion coefficient? calc that 0.03
+    rc = 3.52E-2     # growth rate of X divisions is max 0.0352
+    Dc = 1E-5       #cell diffusion coefficient? calc that 0.03
     w = 1           #w = time?
     Da = 0.0294     #mm2/min
     rho_A = 0.01    #production rate of AHL
@@ -28,9 +28,8 @@ def main():
     environment_size = (59, 59)
     plate = Plate(environment_size)
     fig, axs = plt.subplots(1,1)
-    labels=['upper half','lower half']
     fig2, axs2 = plt.subplots(1,5)
-    plt.suptitle('Change in concentration of species over time                              ')
+    labels=['quarter 1','quarter 2','quarter 3', 'quarter 4']
     
     ##add nutrient to the plate
     U_N = np.ones(environment_size)
@@ -52,7 +51,7 @@ def main():
     def S_behaviour(species, params):
         ## unpack params
         D, rho_n, Dc, rc, w, rho_A, Da, Dti = params
-        s = Dc * hf.ficks(species['S'], w)*hf.leaky_hill(s=species['T'], K=0.6, lam=2, max=3.96, min=1.68) + species['S']*hf.leaky_hill(s=species['N'], K=0.15, lam = 1, max=rc, min=0)
+        s = Dc*hf.ficks(species['S'], w)*hf.leaky_hill(s=species['T']+species['A'], K=37.5e-9, lam=2, max=3.96, min=1.68) + species['S']*hf.leaky_hill(s=species['N'], K=0.15, lam = 1, max=rc, min=0)
         return s
     S.set_behaviour(S_behaviour)
     plate.add_species(S)
@@ -77,7 +76,7 @@ def main():
     def A_behaviour(species, params):
         ## unpack params
         D, rho_n, Dc, rc, w, rho_A, Da, Dt = params
-        a = Da * hf.ficks(species['A'], w) + rho_A*species['S']
+        a = Da*hf.ficks(species['A'], w) + rho_A*species['S']
         return a
     A.set_behaviour(A_behaviour)
     plate.add_species(A)
@@ -86,9 +85,9 @@ def main():
     ##add target to plate
     U_T = np.zeros(environment_size)
     for j in np.linspace(0,58, environment_size[0]):
-            for i in np.linspace(30, 58, 29):
-                U_T[int(i), int(j)] = (int(i)-29)
-            U_T[58,int(j)]=100
+        for i in np.linspace(30, 57, 28):
+            U_T[int(i), int(j)] = ((int(i))-29)
+        U_T[58, int(j)] = 100
     T = Species("T", U_T)
     def T_behaviour(species, params):
         ## unpack params
@@ -105,10 +104,10 @@ def main():
                     params = params)
     
 
-    #plate.plot_simulation(sim, 3)
+    #plate.plot_simulation(sim, 10)
     colour = 'b'
     S = plate.get_all_species()
-    plate.plot_conc_distribution(sim, S, 10,fig,axs,colour)
-    plate.compare_species(sim, S, 10,fig2,axs2,colour)
-    fig.legend(labels, title='Section of plate', loc='center right')
+    plate.plot_conc_target(sim, S, 10,fig,axs,colour)
+    #plate.compare_species(sim, S, 10,fig2,axs2,colour)
+    fig.legend(labels,title='section of plate',loc='center right')
 main()

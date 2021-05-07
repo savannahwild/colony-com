@@ -18,16 +18,17 @@ def main():
 ## experimental parameters
     D = 3E-3        # nutrient diffusion coeff (#mm2/min) maybe?
     rho_n = 0.3     #consumption rate of nutrients by X calc?
-    rc = 1E-2     # growth rate of X divisions is max 0.0352
+    rc = 3.5E-2     # growth rate of X divisions is max 0.0352
     Dc = 1E-5       # cell diffusion coefficient? calc that 0.03
     w = 1           #w = time?
     Da = 0.0294     #mm2/min
     rho_A = 0.01    # production rate of AHL
     Dt = 6e-2    #diffusion rate of target? change
-
+    labels=['upper half','lower half']
     environment_size = (59, 59)
     plate = Plate(environment_size)
     fig, axs = plt.subplots(1,3)
+    fig2, axs2 = plt.subplots(1,1)
     ## add nutrient to the plate
     U_N = np.ones(environment_size)
     N = Species("N", U_N)
@@ -55,8 +56,9 @@ def main():
     ## add target to plate
     U_T = np.zeros(environment_size)
     for j in np.linspace(0,58, environment_size[0]):
-        for i in np.linspace(30, 58, 29):
-            U_T[int(i), int(j)] = ((int(i))-30)/2.8
+        for i in np.linspace(30, 57, 28):
+            U_T[int(i), int(j)] = ((int(i))-29)
+        U_T[58,int(j)]=100
     T = Species("T", U_T)
     def T_behaviour(species, params):
         ## unpack params
@@ -73,12 +75,10 @@ def main():
                     dt = 1.,
                     params = params)
 
-    plate.plot_simulation(sim, 10)
+    #plate.plot_simulation(sim, 3)
     colour = 'b'
-    print("plot conc dist")
     S = plate.get_all_species()
-    plate.plot_conc_distribution(sim, S, 10,fig,axs,colour)
-    
+    plate.plot_conc_distribution(sim, S, 10,fig2,axs2,colour)
     plate.compare_species(sim, S, 10,fig,axs,colour)
-
+    fig2.legend(labels, title='Section of plate', loc='center right')
 main()

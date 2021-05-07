@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 """
-Created on Tue Mar 23 17:48:36 2021
+Created on Wed Apr 14 19:30:22 2021
 
 @author: savan
 """
 
-#7.5.2 
-#effect of different bacteria ratios
-#majority sender
+#7.6.3
+#group + sender minority
 
 from plate import Plate
 from species import Species
@@ -26,13 +25,12 @@ def main():
     Da = 0.0294     #mm2/min
     rho_A = 0.01    #production rate of AHL
     Dti = 6e-2    #diffusion rate of target? change
-    
+
     environment_size = (59, 59)
     fig, axs = plt.subplots(1,5)
-    
     fig2, axs2 = plt.subplots(1,5)
     colours = ['b', 'r', 'g', 'y', 'k','m','c']
-    concs=[10,100,1000,10000,100000]
+    concs=[1e-5,1e-6,1e-7,1e-8,1e-9]
     labels=['quarter 1','quarter 2','quarter 3', 'quarter 4']
     for col, conc in enumerate(concs):
                 
@@ -43,21 +41,22 @@ def main():
         N = Species("N", U_N)
         def N_behaviour(species, params):
             ## unpack params
-            D, rho_n, Dc, rc, w, rho_A, Da, Dti = params
-            n = D*hf.ficks(species['N'], w) - (species['R']+species['S'])*rho_n*hf.leaky_hill(s=species['N'], K=0.15, lam=1, max=rc, min=0)
+            D, rho_n, Dc, rc, w, rho_A, Da, Dti = params                                                     
+            n = D*hf.ficks(species['N'], w) - ((species['S']+species['R']))*rho_n*hf.leaky_hill(s=species['N'], K=0.15, lam=1, max=rc, min=0)
             return n
         N.set_behaviour(N_behaviour)
         plate.add_species(N)
     
         ##add sender strain to the plate
         U_S = np.zeros(environment_size)
+        print(conc*0.001)
         for i in np.linspace(29, 29, 1):
-            U_S[int(i), int(i)] = 0.001
+            U_S[int(i), int(i)] = conc*0.001
         S = Species("S", U_S)
         def S_behaviour(species, params):
             ## unpack params
             D, rho_n, Dc, rc, w, rho_A, Da, Dti = params
-            s = Dc * hf.ficks(species['S'], w)*hf.leaky_hill(s=species['T'], K=0.6, lam=2, max=3.96, min=1.68) + species['S']*hf.leaky_hill(s=species['N'], K=0.15, lam = 1, max=rc, min=0)
+            s = Dc * hf.ficks(species['S'], w)*hf.leaky_hill(s=species['T']+species['A'], K=37.5e-9, lam=2, max=3.96, min=1.68) + species['S']*hf.leaky_hill(s=species['N'], K=0.15, lam = 1, max=rc, min=0)
             return s
         S.set_behaviour(S_behaviour)
         plate.add_species(S)
@@ -66,7 +65,7 @@ def main():
         U_R = np.zeros(environment_size)
         for i in np.linspace(29, 29, 1):
             for j in np.linspace(29,29, 1):
-                U_R[int(i), int(j)] = 0.001/conc
+                U_R[int(i), int(j)] = 0.001
         R = Species("R", U_R)
         def R_behaviour(species, params):
             ## unpack params
@@ -92,7 +91,7 @@ def main():
         for j in np.linspace(0,58, environment_size[0]):
             for i in np.linspace(30, 57, 28):
                 U_T[int(i), int(j)] = ((int(i))-29)
-                U_T[58, 58] = 100
+            U_T[58, int(j)] = 100
         T = Species("T", U_T)
         def T_behaviour(species, params):
             ## unpack params
@@ -109,9 +108,8 @@ def main():
                         params = params)
         colour = colours[col]
         
-        #plate.plot_simulation(sim, 3)
+        plate.plot_simulation(sim, 10)
         S = plate.get_all_species()
-        
         plate.plot_conc_target(sim, S, 10,fig2,axs2[col],colour)
         axs2[col].set_title(str(format(conc, '.1g'))+':1')
         #plate.compare_species(sim, S, 10,fig2,axs2,colour)

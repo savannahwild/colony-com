@@ -30,7 +30,7 @@ def main():
     #fig = 
     fig, axs = plt.subplots(1, 2)
     plt.suptitle('Change in concentration of species over time, with varying yield of sender:nutrient')
-
+    plt.style.use('ggplot')
     yields = [1/10,2/10,3/10]
     
     def N_behaviour(species, params):
@@ -75,7 +75,7 @@ def main():
         colour = colours[col]
         plate.compare_species(sim, Sp, 10, fig, axs, colour)
     
-    fig.legend(labels=yields, title='Yield: species/nutrient')
+    fig.legend(labels=yields, title='Yield: species/nutrient', loc='center right')
  
     fig.show()
 main()

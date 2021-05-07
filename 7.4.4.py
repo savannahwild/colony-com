@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 """
-Created on Tue Mar 23 17:48:36 2021
+Created on Mon Apr 12 10:24:27 2021
 
 @author: savan
 """
 
-#7.5.2 
-#effect of different bacteria ratios
-#majority sender
+#7.4.4 
+#effect of different ahl production rates
 
 from plate import Plate
 from species import Species
@@ -17,24 +16,27 @@ import matplotlib.pyplot as plt
 
 def main():
     
-## experimental parameters
+    ##experimental parameters    
     D = 3E-3        # nutrient diffusion coeff (#mm2/min) maybe?
     rho_n = 0.3     #consumption rate of nutrients by X calc?
-    rc = 3.52E-2     # growth rate of X divisions is max 0.0352
+    rc = 3.5E-2       # growth rate of X divisions is max 0.0352
     Dc = 1E-5       # cell diffusion coefficient? calc that 0.03
     w = 1           #w = time?
     Da = 0.0294     #mm2/min
-    rho_A = 0.01    #production rate of AHL
-    Dti = 6e-2    #diffusion rate of target? change
-    
+    rho_As = np.linspace(0,0.01,5)    #production rate of AHL
+    Dti = 6e-2    #diffusion rate of target? changec
+
     environment_size = (59, 59)
-    fig, axs = plt.subplots(1,5)
     
     fig2, axs2 = plt.subplots(1,5)
+    labels=['upper half','lower half']
+    plt.suptitle('Change in concentration of species over time                              ')
+    
     colours = ['b', 'r', 'g', 'y', 'k','m','c']
-    concs=[10,100,1000,10000,100000]
-    labels=['quarter 1','quarter 2','quarter 3', 'quarter 4']
-    for col, conc in enumerate(concs):
+    fig,axs = plt.subplots(1,5)
+    plt.tight_layout()
+
+    for col, rho_A in enumerate(rho_As):
                 
         plate = Plate(environment_size)
         
@@ -66,7 +68,7 @@ def main():
         U_R = np.zeros(environment_size)
         for i in np.linspace(29, 29, 1):
             for j in np.linspace(29,29, 1):
-                U_R[int(i), int(j)] = 0.001/conc
+                U_R[int(i), int(j)] = 0.001
         R = Species("R", U_R)
         def R_behaviour(species, params):
             ## unpack params
@@ -90,9 +92,9 @@ def main():
         ##add target to plate
         U_T = np.zeros(environment_size)
         for j in np.linspace(0,58, environment_size[0]):
-            for i in np.linspace(30, 57, 28):
-                U_T[int(i), int(j)] = ((int(i))-29)
-                U_T[58, 58] = 100
+            for i in np.linspace(30, 58, 29):
+                U_T[int(i), int(j)] = (int(i)-29)
+            U_T[58,int(j)]=100
         T = Species("T", U_T)
         def T_behaviour(species, params):
             ## unpack params
@@ -111,9 +113,9 @@ def main():
         
         #plate.plot_simulation(sim, 3)
         S = plate.get_all_species()
-        
-        plate.plot_conc_target(sim, S, 10,fig2,axs2[col],colour)
-        axs2[col].set_title(str(format(conc, '.1g'))+':1')
+        plate.plot_conc_distribution(sim, S, 10,fig,axs[col],colour)
+        fig.legend(labels, title='Section of plate', loc='center left')
+        axs[col].set_title('rho_A = '+str(rho_A))
         #plate.compare_species(sim, S, 10,fig2,axs2,colour)
-    plt.legend(labels,title='section of plate',loc='upper left')
+        
 main()

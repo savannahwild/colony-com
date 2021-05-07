@@ -76,84 +76,119 @@ class Plate:
     def plot_simulation(self, sim, timepoints):
         tps = np.linspace(0, sim.shape[3] - 1, timepoints)
         for tp in tps:
-            fig, axs = plt.subplots(int(np.ceil(len(self.species) / 3)), 3, sharex='all', sharey='all')
-            tp = int(tp)
-            for idx, (ax, s) in enumerate(zip(axs.flatten(), self.species)):
-                im = ax.imshow(sim[idx, :, :, tp], interpolation="none",
-                                     cmap=cm.viridis, vmin=0,
-                               vmax=np.max(sim[idx, :, :, :]))
-                ax.set_title(s.get_name() + ' timepoint: ' + str(tp))
-                divider = make_axes_locatable(ax)
-                cax = divider.append_axes("right", size="5%", pad=0.05)
-                fig.colorbar(im, cax=cax, shrink=0.8)
-            fig.savefig('fig_timepoint_' + str(tp) +'.pdf')
-            fig.show()
-
-    
-    def plot_conc_distribution(self, sim, species, timepoints, fig, axs,colour):
-        tps = np.linspace(0, sim.shape[3] - 1, timepoints)
-        #section=['upper half','lower half']
-        x=np.arange(5)  
-        y=[]
-        y1=[]
-        y2=[]
-        tp = int(tps[5])
-        labels=[]
-        for idx, s in enumerate(self.species):
-        #for pos, tp in enumerate(tps):
-            #x=0
-            y1.append(0)
-            for i in range(0, 29): 
-                for j in range(0, 59):
-                    y1[idx]+=sim[idx, i, j, tp]                   
-            y2.append(0)
-            for i in range(30, 59): 
-                for j in range(0, 59):
-                    y2[idx] += sim[idx, i, j, tp]
-            y.append(y1)
-            y.append(y2)                   
-            labels.append(s.get_name())
-        axs.bar(x, y[0],width=0.25,color='b',label='upper')
-        axs.bar(x+0.25,y[1],width=0.25,color='g',label='lower')
-        axs.set_xticks(x)
-        axs.set_xticklabels(labels)
-        axs.set_title('Concentration distribution')
-        axs.legend()
-        axs.set_xlabel('Species')
-        axs.set_ylabel('Conc')
-        
-        fig.show()        
-                    
-            
-        
-    def compare_species(self, sim, species, timepoints, fig, axs, colour):
-        tps = np.linspace(0, sim.shape[3] - 1, timepoints)
-        for idx, s in enumerate(self.species):
-            y = []
-            x = []
-            for pos, tp in enumerate(tps):
-                y.append(0)
+            #if int(tp) == 0 or int(tp) == 4999 or int(tp) == 8999:
+                fig, axs = plt.subplots(int(np.ceil(len(self.species)/3)), 3) #sharex='all', sharey='all')
                 tp = int(tp)
-                x.append(tp)
-                for i in range(0, self.size[0]):
-                    for j in range(0, self.size[1]):
-                        y[pos] += sim[idx, i, j, tp]
-            axs[idx].plot(x, y, colour)
-            axs[idx].set_xlabel("fig_timepoint_")
-            axs[idx].set_ylabel("concentration of " + str(s.get_name()))
-            axs[idx].set_title(str(s.get_name()))
-      
-    #not sued
-    def plot_plate(self):
-        print("plotting plate")
-        fig, axs = plt.subplots(int(np.ceil(len(self.species) / 3)), 3, sharex='all', sharey='all')
-
+                for idx, (ax, s) in enumerate(zip(axs.flatten(), self.species)):
+                    im = ax.imshow(sim[idx, :, :, tp], interpolation="none",
+                                         cmap=cm.viridis, vmin=0,
+                                   vmax=np.max(sim[idx, :, :, :]))
+                    ax.set_title('Species:'+s.get_name())
+                    divider = make_axes_locatable(ax)
+                    cax = divider.append_axes("right", size="5%", pad=0.05)
+                    fig.colorbar(im, cax=cax, shrink=0.8)
+                    ax.set_xlabel('Concentration (mm^2/min)')
+                    ax.set_ylabel('Concentration (mm^2/min)')
+                fig.suptitle('Plate simulation at ' + str(tp) + ' minutes')
+                #fig.savefig('fig_timepoint_' + str(tp) +'.pdf')
+                plt.style.use('ggplot')
+                plt.tight_layout()
+                fig.show()
+    
+    def plot_conc_target(self, sim, species, timepoints, loop):
+        tps = np.linspace(0, sim.shape[3] - 1, timepoints)
+        xlabels=['1:100','1:10','1:1','10:1','100:1']
+        if loop==0:
+            fig, axs = plt.subplots(1, 2)
+            #xlabels=[]
+        if loop>0:
+            fig=plt.gcf()
+            axs = plt.gcf().get_axes()
+        y=[]
+        y1=[0,0]
+        y2=[0,0]
+        y3=[0,0]
+        y4=[0,0]
+        tp = 5999
+        print(tp)
+        labels = ['quadrant 1','quadrant 2','quadrant 3','quadrant 4']
+        
         for idx, s in enumerate(self.species):
-            im = axs[idx].imshow(s.get_U(), interpolation="none", cmap=cm.viridis, vmin=0)
-            axs[idx].set_title(s.get_name())
-            divider = make_axes_locatable(axs[idx])
-            cax = divider.append_axes("right", size="5%", pad=0.05)
-            fig.colorbar(im, cax=cax, shrink=0.8)
-
-        fig.savefig('fig.pdf')
+            if idx == 1 or idx==2:
+                for i in range(0, 14): 
+                    for j in range(0, 59):
+                        y1[idx-1]+= sim[idx, i, j, tp]/870.25                   
+                for i in range(15, 29): 
+                    for j in range(0, 59):
+                        y2[idx-1] += sim[idx, i, j, tp]/870.25
+                for i in range(30, 44): 
+                    for j in range(0, 59):
+                        y3[idx-1]+= sim[idx, i, j, tp]/870.25                   
+                for i in range(45, 59): 
+                    for j in range(0, 59):
+                        y4[idx-1] += sim[idx, i, j, tp]/870.25
+                y.append(y1)
+                y.append(y2)
+                y.append(y3)
+                y.append(y4)
+                x=np.arange(0,5,1)
+                #print(y[16])
+                #print(y[17])
+                #print(y[18])
+                #print(y[19])
+                axs[idx-1].bar(loop-0.3, y[0],width=0.2,color='b')  
+                axs[idx-1].bar(loop-0.1,y[1],width=0.2,color='r')
+                axs[idx-1].bar(loop+0.1,y[2],width=0.2,color='g')
+                axs[idx-1].bar(loop+0.3,y[3],width=0.2,color='y')
+                axs[idx-1].set_xticks(x)
+                
+                
+                axs[idx-1].set_title(s.get_name())
+                axs[idx-1].set_xticklabels(['1:100','1:10','1:1','10:1','100:1'])#axs[idx-1].set_ylim(0,3)
+                axs[idx-1].set_xlabel('ratio S:R')
+                axs[idx-1].set_ylabel('Concentration (mm^2/min)')
+       
+        #axs[1].set_xticklabels(xlabels)
+        #xlabels.append(loop)
+       # if len(xlabels) == 5:    
+          #  axs[0].set_xticklabels(xlabels)
+           # axs[1].set_xticklabels(xlabels)
+        fig.legend(labels, title='Plate section', loc='upper left')
+        plt.style.use('ggplot')
+        plt.tight_layout()
+        fig.show()
+        
+    def compare_species(self, sim, species, timepoints, loop):
+        tps = np.linspace(0, sim.shape[3] - 1, timepoints)
+        colours = ['b', 'r', 'g', 'y', 'k']
+        labels = []
+        if loop==0:
+            if self.get_num_species() < 4:
+                fig, axs = plt.subplots(1, self.get_num_species())
+            else:
+                fig, axs = plt.subplots(1, 3)
+        if loop>0:
+            axs = plt.gcf().get_axes()
+        for idx, s in enumerate(self.species):
+            if idx==0 or idx == 1 or idx==2:
+                    y = []
+                    x = []
+                    for pos, tp in enumerate(tps):
+                        y.append(0)
+                        tp = int(tp)
+                        x.append(tp)
+                        for i in range(0, self.size[0]):
+                            for j in range(0, self.size[1]):
+                                y[pos] += (sim[idx, i, j, tp]/3481)
+                    axs[idx].plot(x, y, colours[loop],label=str(sim[idx, 29, 29, 0]))
+                    axs[idx].set_xlabel("time (min)")
+                    #[idx].set_ylim(0,3)
+                    axs[idx].set_ylabel("concentration of " + str(s.get_name()) + " (mm^2/min)")
+                    axs[idx].set_title(str(s.get_name()))
+                    #axs[idx].set_xlim(0,9000)
+                    #axs[idx].legend(title='initial concentration')
+        plt.legend([0,0.0025,0.005,0.0075,0.01], title='rho_A')
+        plt.tight_layout()
+        plt.style.use('ggplot')
         #fig.show()
+

@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 """
-Created on Thu Jan 21 19:13:54 2021
+Created on Mon Mar 15 23:32:40 2021
 
 @author: savan
 """
-#target everywhere using found minimum and maximum motility
+#target everywhere final conc to use
 
 from plate import Plate
 from species import Species
@@ -24,10 +24,12 @@ def main():
     Dt = 0    #random difusion rate of target molecule
     environment_size = (59, 59)
     colours = ['b', 'r', 'g', 'y', 'k']
-    concs = np.linspace(0,9.12,5)
+    concs = np.linspace(0,10,2)
     fig, axs = plt.subplots(1,3)
-    plt.suptitle('Change in concentration of species over time with inducer present')
-    #fig2, axs2 = plt.subplots(1, 2)
+    plt.suptitle('Change in concentration of species over time with inducer present               ddddddddddddddddd')
+    plt.style.use('ggplot')
+    fig2, axs2 = plt.subplots(1, 2)
+    labels=['upper half','lower half']
     #plt.suptitle('Change in concentration of species over time in each plate quadrant with inducer present')
     
     def S_behaviour(species, params):
@@ -84,12 +86,12 @@ def main():
                         params = params)
 
         #plate.plot_simulation(sim, 3)
-    
-        #print("plot conc dist")
+
         S = plate.get_all_species()
         colour = colours[col]
-        #plate.plot_conc_distribution(sim, S, 10)
         plate.compare_species(sim, S, 10, fig, axs, colour)
-    fig.legend(labels=concs, title='Initial concentration of inducer')
+        plate.plot_conc_distribution(sim, S, 10, fig2, axs2[col], colour)
+    fig.legend(labels=concs, title='Initial [T]', loc='center')
+    fig2.legend(labels, title='Section of plate', loc='center right')
     fig.show()
 main()
